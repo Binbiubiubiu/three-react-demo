@@ -1,15 +1,14 @@
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Color, PMREMGenerator } from "three";
-import { RoomEnvironment} from "three-stdlib";
+import { RoomEnvironment } from "three-stdlib";
 import { Canvas, useThree } from "@react-three/fiber";
 import {
   PerspectiveCamera,
   OrbitControls,
-  Html,
-  useProgress,
   useGLTF,
   useAnimations,
 } from "@react-three/drei";
+import { ModelLoading, PageLayout } from "../components";
 
 const url = "/models/gltf/LittlestTokyo.glb";
 
@@ -32,43 +31,40 @@ export function House() {
   );
 }
 
-useGLTF.preload(url)
-
-function Loader() {
-  const { progress } = useProgress();
-  return <Html center>{progress} % loaded</Html>;
-}
+useGLTF.preload(url);
 
 function Scene() {
-  const state = useThree();
+  const gl = useThree((state) => state.gl);
+  const scene = useThree((state) => state.scene);
 
   useEffect(() => {
-    const { gl, scene } = state;
     const pmremGenerator = new PMREMGenerator(gl);
     scene.background = new Color(0xbfe3dd);
     scene.environment = pmremGenerator.fromScene(
       new RoomEnvironment(),
-      0.04,0.1
+      0.04
     ).texture;
-  }, [state]);
+  }, [gl, scene]);
   return (
-    <Suspense fallback={<Loader />}>
+    <ModelLoading>
       <House />
-    </Suspense>
+    </ModelLoading>
   );
 }
 
 export default function Page() {
   return (
-    <div className="full-window">
+    <PageLayout>
       <Canvas>
-        <PerspectiveCamera makeDefault position={[5, 2, 8]} fov={40} far={100} />
-        <OrbitControls
-          target={[0, 0.5, 0]}
-          enablePan={false}
+        <PerspectiveCamera
+          makeDefault
+          position={[5, 2, 8]}
+          fov={40}
+          far={100}
         />
+        <OrbitControls target={[0, 0.5, 0]} enablePan={false} />
         <Scene />
       </Canvas>
-    </div>
+    </PageLayout>
   );
 }
