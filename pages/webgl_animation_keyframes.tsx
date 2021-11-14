@@ -13,7 +13,7 @@ import { ModelLoading, PageCanvas } from "../components";
 const url = "/models/gltf/LittlestTokyo.glb";
 
 export function House() {
-  const gltf = useGLTF(url, true);
+  const gltf = useGLTF(url, "/js/libs/draco/gltf/");
 
   const ref = useRef();
   const { actions, names } = useAnimations(gltf.animations, ref);
@@ -31,7 +31,7 @@ export function House() {
   );
 }
 
-useGLTF.preload(url, true);
+useGLTF.preload(url, "/js/libs/draco/gltf/");
 
 function Scene() {
   const gl = useThree((state) => state.gl);
