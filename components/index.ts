@@ -1,2 +1,2 @@
 export * from './ModelLoading';
-export * from './PageLayout';
+export * from './PageCanvas';

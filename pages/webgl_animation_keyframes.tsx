@@ -8,7 +8,7 @@ import {
   useGLTF,
   useAnimations,
 } from "@react-three/drei";
-import { ModelLoading, PageLayout } from "../components";
+import { ModelLoading, PageCanvas } from "../components";
 
 const url = "/models/gltf/LittlestTokyo.glb";
 
@@ -54,17 +54,10 @@ function Scene() {
 
 export default function Page() {
   return (
-    <PageLayout>
-      <Canvas>
-        <PerspectiveCamera
-          makeDefault
-          position={[5, 2, 8]}
-          fov={40}
-          far={100}
-        />
-        <OrbitControls target={[0, 0.5, 0]} enablePan={false} />
-        <Scene />
-      </Canvas>
-    </PageLayout>
+    <PageCanvas>
+      <PerspectiveCamera makeDefault position={[5, 2, 8]} fov={40} far={100} />
+      <OrbitControls target={[0, 0.5, 0]} enablePan={false} />
+      <Scene />
+    </PageCanvas>
   );
 }

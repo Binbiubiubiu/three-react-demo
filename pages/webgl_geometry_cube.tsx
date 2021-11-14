@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useTexture, PerspectiveCamera } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Mesh } from "three";
-import {ModelLoading,PageLayout} from "../components";
+import { ModelLoading, PageCanvas } from "../components";
 
 const TEXTURE_URL = "/textures/crate.gif";
 
@@ -33,12 +33,10 @@ function Scene() {
 
 export default function Page() {
   return (
-    <PageLayout>
-      <Canvas>
-        <color args={[0, 0, 0]} attach="background" />
-        <PerspectiveCamera makeDefault fov={70} far={1000} position-z={400} />
-        <Scene />
-      </Canvas>
-    </PageLayout>
+    <PageCanvas>
+      <color args={[0, 0, 0]} attach="background" />
+      <PerspectiveCamera makeDefault fov={70} far={1000} position-z={400} />
+      <Scene />
+    </PageCanvas>
   );
 }
