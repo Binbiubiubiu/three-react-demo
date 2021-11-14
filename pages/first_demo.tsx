@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef } from "react";
+import { PageCanvas } from "../components";
 
 export function Box() {
   const mash = useRef<THREE.Mesh>();
@@ -33,12 +34,10 @@ export function Box() {
 
 export default function FirstDemoPage() {
   return (
-    <div className="full-window">
-      <Canvas>
-        <ambientLight intensity={0.1} />
-        <directionalLight color="red" position={[0, 0, 5]}></directionalLight>
-        <Box />
-      </Canvas>
-    </div>
+    <PageCanvas>
+      <ambientLight intensity={0.1} />
+      <directionalLight color="red" position={[0, 0, 5]}></directionalLight>
+      <Box />
+    </PageCanvas>
   );
 }

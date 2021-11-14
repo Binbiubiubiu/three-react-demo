@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Color, PMREMGenerator } from "three";
 import { RoomEnvironment } from "three-stdlib";
-import { Canvas, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import {
   PerspectiveCamera,
   OrbitControls,
@@ -13,7 +13,7 @@ import { ModelLoading, PageCanvas } from "../components";
 const url = "/models/gltf/LittlestTokyo.glb";
 
 export function House() {
-  const gltf = useGLTF(url, "/js/libbs/draco/gltf");
+  const gltf = useGLTF(url, true);
 
   const ref = useRef();
   const { actions, names } = useAnimations(gltf.animations, ref);
@@ -31,7 +31,7 @@ export function House() {
   );
 }
 
-useGLTF.preload(url);
+useGLTF.preload(url, true);
 
 function Scene() {
   const gl = useThree((state) => state.gl);

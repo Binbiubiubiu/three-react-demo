@@ -1,26 +1,27 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import { render, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import { Color, Fog, AnimationAction, AnimationMixer } from "three";
-import { button, buttonGroup, useControls } from "leva";
+import { button, useControls } from "leva";
 import { ModelLoading, PageCanvas } from "../components";
 import { useAnimationCustom } from "../hooks";
 
+const MODEL_URL = "/models/gltf/Soldier.glb";
 declare module window {
   let modifyStepSize: number;
   let idleAction: AnimationAction | null;
   let walkAction: AnimationAction | null;
   let runAction: AnimationAction | null;
   let actions: Array<AnimationAction | null>;
-  let mixer:AnimationMixer;
-  let singleStepMode:boolean;
-  let sizeOfNextStep:number;
-  let useDefaultDuration:boolean;
-  let setCustomDuration:number;
+  let mixer: AnimationMixer;
+  let singleStepMode: boolean;
+  let sizeOfNextStep: number;
+  let useDefaultDuration: boolean;
+  let setCustomDuration: number;
 }
 
 function pauseContinue() {
-  const { idleAction,singleStepMode } = window;
+  const { idleAction, singleStepMode } = window;
   if (singleStepMode) {
     window.singleStepMode = false;
     unPauseAllActions();
@@ -33,18 +34,21 @@ function pauseContinue() {
   }
 }
 
-function toSingleStepMode(){
+function toSingleStepMode() {
   unPauseAllActions();
   window.singleStepMode = true;
   window.sizeOfNextStep = window.modifyStepSize;
   console.log(window.modifyStepSize);
-};
+}
 
-function prepareCrossFade( startAction:AnimationAction | null, endAction:AnimationAction | null, defaultDuration:number ) {
-
+function prepareCrossFade(
+  startAction: AnimationAction | null,
+  endAction: AnimationAction | null,
+  defaultDuration: number
+) {
   // Switch default / custom crossfade duration (according to the user's choice)
 
-  const duration = setCrossFadeDuration( defaultDuration );
+  const duration = setCrossFadeDuration(defaultDuration);
 
   // Make sure that we don't go on in singleStepMode, and that all actions are unpaused
 
@@ -53,62 +57,54 @@ function prepareCrossFade( startAction:AnimationAction | null, endAction:Animati
   // If the current action is 'idle' (duration 4 sec), execute the crossfade immediately;
   // else wait until the current action has finished its current loop
 
-  if ( startAction === window.idleAction ) {
-
-    executeCrossFade( startAction, endAction, duration );
-
+  if (startAction === window.idleAction) {
+    executeCrossFade(startAction, endAction, duration);
   } else {
-
-    synchronizeCrossFade( startAction, endAction, duration );
-
+    synchronizeCrossFade(startAction, endAction, duration);
   }
-
 }
 
-function setCrossFadeDuration( defaultDuration:number ) {
-
+function setCrossFadeDuration(defaultDuration: number) {
   // Switch default crossfade duration <-> custom crossfade duration
 
-  if ( window.useDefaultDuration ) {
+  if (window.useDefaultDuration) {
     return defaultDuration;
   } else {
     return window.setCustomDuration;
-
   }
-
 }
 
-function synchronizeCrossFade( startAction:AnimationAction | null, endAction:AnimationAction | null, duration:number ) {
+function synchronizeCrossFade(
+  startAction: AnimationAction | null,
+  endAction: AnimationAction | null,
+  duration: number
+) {
+  const { mixer } = window;
+  mixer.addEventListener("loop", onLoopFinished);
 
-  const {mixer} = window;
-  mixer.addEventListener( 'loop', onLoopFinished );
+  function onLoopFinished(event: any) {
+    if (event.action === startAction) {
+      mixer.removeEventListener("loop", onLoopFinished);
 
-  function onLoopFinished( event:any ) {
-
-    if ( event.action === startAction ) {
-
-      mixer.removeEventListener( 'loop', onLoopFinished );
-
-      executeCrossFade( startAction, endAction, duration );
-
+      executeCrossFade(startAction, endAction, duration);
     }
-
   }
-
 }
 
-function executeCrossFade( startAction:AnimationAction | null, endAction:AnimationAction | null, duration:number ) {
-
+function executeCrossFade(
+  startAction: AnimationAction | null,
+  endAction: AnimationAction | null,
+  duration: number
+) {
   // Not only the start action, but also the end action must get a weight of 1 before fading
   // (concerning the start action this is already guaranteed in this place)
 
-  setWeight( endAction, 1 );
-  endAction&& (endAction.time = 0);
+  setWeight(endAction, 1);
+  endAction && (endAction.time = 0);
 
   // Crossfade with warping - you can also try without warping by setting the third parameter to false
 
-  startAction?.crossFadeTo( endAction!, duration, true );
-
+  startAction?.crossFadeTo(endAction!, duration, true);
 }
 
 function setWeight(action: AnimationAction | null, weight: number) {
@@ -147,12 +143,12 @@ function pauseAllActions() {
   });
 }
 
-function unPauseAllActions(){
+function unPauseAllActions() {
   const { actions } = window;
   actions.forEach(function (action) {
     action && (action.paused = false);
   });
-};
+}
 
 function AnimationController({ animations, modelRef }: any) {
   const {
@@ -186,10 +182,9 @@ function AnimationController({ animations, modelRef }: any) {
   });
 
   useEffect(() => {
-    initModel(modelRawActions, names,mixer);
+    initModel(modelRawActions, names, mixer);
     activateAllActions();
-  }, [activateAllActions, modelRawActions, names,mixer]);
-
+  }, [activateAllActions, modelRawActions, names, mixer]);
 
   useControls("Pausing/Stepping", {
     pauseOrContinue: button(pauseContinue),
@@ -201,34 +196,34 @@ function AnimationController({ animations, modelRef }: any) {
   });
 
   useControls("Pausing/Stepping", {
-    fromWalkToIdle:button(() => {
-      prepareCrossFade( window.walkAction, window.idleAction, 1.0 );
+    fromWalkToIdle: button(() => {
+      prepareCrossFade(window.walkAction, window.idleAction, 1.0);
     }),
     fromIdleToWalk: button(() => {
-      prepareCrossFade( window.idleAction, window.walkAction, 0.5 );
+      prepareCrossFade(window.idleAction, window.walkAction, 0.5);
     }),
     fromWalkToRun: button(() => {
-      prepareCrossFade( window.walkAction, window.runAction, 2.5 );
+      prepareCrossFade(window.walkAction, window.runAction, 2.5);
     }),
     fromRunToWalk: button(() => {
-      prepareCrossFade( window.runAction, window.walkAction, 5.0 );
+      prepareCrossFade(window.runAction, window.walkAction, 5.0);
     }),
     useDefaultDuration: {
-      value:true,
-      onChange:(v)=>window.useDefaultDuration =v
+      value: true,
+      onChange: (v) => (window.useDefaultDuration = v),
     },
     setCustomDuration: {
-      value:3.5,
-      onChange:(v)=>window.setCustomDuration =v
+      value: 3.5,
+      onChange: (v) => (window.setCustomDuration = v),
     },
   });
 
   useControls("General Speed", {
-    modifyTimeScale:{
-      value:1.0,
-      onChange:(speed)=>{
+    modifyTimeScale: {
+      value: 1.0,
+      onChange: (speed) => {
         mixer.timeScale = speed;
-      }
+      },
     },
   });
 
@@ -245,7 +240,7 @@ function AnimationController({ animations, modelRef }: any) {
 }
 
 function Man() {
-  const { scene: model, animations } = useGLTF("/models/gltf/Soldier.glb");
+  const { scene: model, animations } = useGLTF(MODEL_URL);
 
   const ref = useRef();
 
@@ -268,6 +263,7 @@ function Man() {
     </>
   );
 }
+useGLTF.preload(MODEL_URL);
 
 function Plane() {
   return (
