@@ -1,1 +1,1 @@
-const config = ["box","first_demo","webgl_animation_keyframes","webgl_animation_skinning_blending","webgl_geometry_cube"];export default config
+const config = ["box","first_demo","webgl_animation_keyframes","webgl_animation_skinning_blending","webgl_geometry_cube","webgl_camera_array"];export default config

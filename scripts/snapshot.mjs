@@ -33,7 +33,8 @@ const pages = [
   { path: 'first_demo', delay: 1000 },
   { path: 'webgl_animation_keyframes', delay: 4000 },
   { path: 'webgl_animation_skinning_blending', delay: 3000 },
-  { path: 'webgl_geometry_cube', delay: 1000 }
+  { path: 'webgl_geometry_cube', delay: 1000 },
+  { path: 'webgl_camera_array', delay: 1000 }
 ];
 
 (async () => {
@@ -43,8 +44,9 @@ const pages = [
 
   const page = await browser.newPage();
   page.setViewport({
-    width: 500,
-    height: 400,
+    width: 250,
+    height: 200,
+    deviceScaleFactor:2
   });
   
   await pages.map(({path,delay}) => {

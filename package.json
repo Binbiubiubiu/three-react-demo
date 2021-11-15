@@ -22,7 +22,7 @@
     "@types/node": "16.11.6",
     "@types/ora": "^3.2.0",
     "@types/react": "17.0.34",
-    "@types/three": "^0.133.1",
+    "@types/three": "^0.134.0",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.2",
     "next-transpile-modules": "^9.0.0",
