@@ -34,7 +34,8 @@ const pages = [
   { path: 'webgl_animation_keyframes', delay: 4000 },
   { path: 'webgl_animation_skinning_blending', delay: 3000 },
   { path: 'webgl_geometry_cube', delay: 1000 },
-  { path: 'webgl_camera_array', delay: 1000 }
+  { path: 'webgl_camera_array', delay: 1000 },
+  { path: 'webgl_decals', delay: 2000 }
 ];
 
 (async () => {
