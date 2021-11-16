@@ -10,7 +10,15 @@ const spinner = ora('Generating snapshots...').start();
 const pagesDir = path.resolve(__dirname, "..", "pages");
 const snapshotsDir = path.resolve(__dirname, "..", "public","snapshots");
 
-const checkSnapShotIsExist = p=> fs.existsSync(path.join(snapshotsDir,`${p}.png`));
+const checkSnapShotIsExist = p=> {
+  let err = null;
+  try {
+    fs.accessSync(path.join(snapshotsDir,`${p}.png`))
+  } catch (error) {
+    err = error;
+  }
+  return err === null;
+};
 
 const CONFIG_FILE = path.join(snapshotsDir,`index.js`)
 
