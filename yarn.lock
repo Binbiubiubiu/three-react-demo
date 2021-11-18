@@ -3984,7 +3984,7 @@ zstddec@^0.0.2:
   resolved "https://registry.npmmirror.com/zstddec/download/zstddec-0.0.2.tgz#57e2f28dd1ff56b750e07d158a43f0611ad9eeb4"
   integrity sha1-V+LyjdH/VrdQ4H0VikPwYRrZ7rQ=
 
-zustand@^3.5.1, zustand@^3.5.13, zustand@^3.5.2:
+zustand@^3.5.1, zustand@^3.5.13, zustand@^3.5.2, zustand@^3.6.5:
   version "3.6.5"
   resolved "https://registry.npmmirror.com/zustand/download/zustand-3.6.5.tgz#42a459397907d6bf0e2375351394733b2f83ee44"
   integrity sha512-/WfLJuXiEJimt61KGMHebrFBwckkCHGhAgVXTgPQHl6IMzjqm6MREb1OnDSnCRiSmRdhgdFCctceg6tSm79hiw==
